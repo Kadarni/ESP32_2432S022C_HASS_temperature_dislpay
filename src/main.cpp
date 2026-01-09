@@ -10,13 +10,15 @@ char ssid[] = "palfi3";
 const char *password = "20170212a20140627b19861208c19860328d00";
 
 const char* mqtt_server = "192.168.1.19"; //192.168.1.19
+
 const char* mqttUser = "szenzorok"; //szenzorok
+
 const char* mqttPassword ="Szenzorok1234"; //Szenzorok1234
+
 double temperature = -999;
 char msg[50] = "";
 
 #define mqtt_port 1883
-// #define MQTT_SERIAL_PUBLISH_CH "/testtopic/1"
 
 WiFiClient wifiClient;
 PubSubClient client(wifiClient);
@@ -122,21 +124,35 @@ void setup() {
   log_i("Free PSRAM: %d bytes", ESP.getPsramSize());
   log_i("SDK version: %s", ESP.getSdkVersion());
 
-  setup_wifi();
-  client.setServer(mqtt_server, mqtt_port);
-  client.setCallback(callback);
-  reconnect();
-  configTime(3600, 3600, "pool.ntp.org", "time.nist.gov");
   smartdisplay_init();
   // Set display rotation, choose one of:
   lv_display_set_rotation(lv_display_get_default(), LV_DISPLAY_ROTATION_90);
   lv_obj_t* label_num = lv_label_create(lv_scr_act());
-  lv_label_set_text(label_num, "Initializing...");
+  lv_label_set_text(label_num, "Initializing ...");
   lv_obj_set_style_text_color(label_num, lv_color_hex(0xFF0000), 0);
   lv_obj_set_style_text_font(label_num, &lv_font_montserrat_28, 0);
   lv_obj_align(label_num, LV_ALIGN_CENTER, 0, 40);
   lv_obj_set_style_bg_color(lv_scr_act(), lv_color_hex(0x00000), LV_PART_MAIN);
   lv_obj_set_style_bg_opa(lv_scr_act(), LV_OPA_COVER, LV_PART_MAIN);
+  
+  setup_wifi();
+  delay(1000);
+  
+  client.setServer(mqtt_server, mqtt_port);
+  client.setCallback(callback);
+  reconnect();
+  configTime(3600, 3600, "pool.ntp.org", "time.nist.gov");
+  delay(1000);
+
+  // lv_obj_t* label_num = lv_label_create(lv_scr_act());
+  lv_obj_t* label_num1 = lv_label_create(lv_scr_act());
+  lv_label_set_text(label_num1, "Init DONE!");
+  lv_obj_set_style_text_color(label_num1, lv_color_hex(0x00FF00), 0);
+  lv_obj_set_style_text_font(label_num1, &lv_font_montserrat_28, 0);
+  lv_obj_align(label_num1, LV_ALIGN_CENTER, 0, 80);
+  // lv_obj_set_style_bg_color(lv_scr_act(), lv_color_hex(0x00000), LV_PART_MAIN);
+  // lv_obj_set_style_bg_opa(lv_scr_act(), LV_OPA_COVER, LV_PART_MAIN);
+
 }
 
 auto lv_last_tick = millis();
